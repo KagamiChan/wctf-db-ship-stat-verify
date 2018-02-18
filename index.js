@@ -34,7 +34,6 @@ const main = async () => {
     const start2Res = await fetch('http://api.kcwiki.moe/start2', fetchOptions)
     const start2 = await start2Res.json()
     $ships = _.keyBy(start2.api_mst_ship, 'api_id')
-
     shipStatReport = generateShipStatReport(stat)
   } catch (e) {
     console.error(e)
@@ -78,7 +77,7 @@ const main = async () => {
       dbMissingIds.push(mstId)
       return
     }
-    if (_.isEmpty(statReport)) {
+    if (_.isEmpty(statReport) || statReport === 'insufficient') {
       reportInsufficientIds.push(mstId)
       return
     }

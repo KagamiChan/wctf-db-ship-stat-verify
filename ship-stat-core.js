@@ -84,7 +84,7 @@ const generateShipStatReport = statRaw =>
         los: losReports,
       }
 
-      return _.mapValues(keyedReports, (statReports, statName) => {
+      const shipReports = _.mapValues(keyedReports, (statReports, statName) => {
         const lvlReports = _.mapValues(
           _.groupBy(statReports, 'lv'),
           (raws, levelStr) => {
@@ -106,8 +106,13 @@ const generateShipStatReport = statRaw =>
         const pairsObj = _.fromPairs(
           _.toPairs(lvlReports).filter((_lvlStr, stat) => _.isNumber(stat))
         )
+        if (_.values(pairsObj).length < 2) {
+          return 'insufficient'
+        }
         return computeStatInfo(pairsObj).map(({baseSt, stDiff}) => ({base: baseSt, max: baseSt+stDiff}))
       })
+
+      return _.values(shipReports).some(x => x === 'insufficient') ? 'insufficient' : shipReports
     }
   )
 
