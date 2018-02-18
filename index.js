@@ -6,6 +6,8 @@ const proxy = process.env.https_proxy || process.env.http_proxy || ''
 const fetchOptions = {}
 fetchOptions.agent = proxy ? new HttpsProxyAgent(proxy) : null
 
+const {generateShipStatReport} = require('./ship-stat-core')
+
 const parseDB = data => _(data)
   .split('\n')
   .filter(Boolean)
@@ -33,7 +35,7 @@ const main = async () => {
     const start2 = await start2Res.json()
     $ships = _.keyBy(start2.api_mst_ship, 'api_id')
 
-    shipStatReport = await (await fetch('https://gist.githubusercontent.com/Javran/31837860b6aa61908a1460a5561a99b6/raw/ship-stat-report.json', fetchOptions)).json()
+    shipStatReport = generateShipStatReport(stat)
   } catch (e) {
     console.error(e)
   }
