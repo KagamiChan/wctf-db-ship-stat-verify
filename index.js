@@ -78,7 +78,7 @@ const main = async () => {
       dbMissingIds.push(mstId)
       return
     }
-    if (_.isEmpty(statReport) || statReport === 'insufficient') {
+    if (_.isEmpty(statReport)) {
       reportInsufficientIds.push(mstId)
       return
     }
