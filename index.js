@@ -88,7 +88,6 @@ const main = async () => {
       } = dbShip.stat
       return {base, max}
     }
-
     _.words('asw evasion los').map(statName => {
       const dbStat = getStat(statName)
       const possibleStatInfo = statReport[statName]
@@ -107,7 +106,22 @@ const main = async () => {
   const describeIds = xs => xs.map(getShipName).join(', ')
   if (dbMissingIds.length > 0) {
     console.log('Wctf is missing data for following ships:')
-    console.log(`  ${describeIds(dbMissingIds)}`)
+    dbMissingIds.map(mstId => {
+      const statReport = shipStatReport[mstId]
+      if (statReport !== 'insufficient' && !_.isEmpty(statReport)) {
+        console.log(`  ${getShipName(mstId)} (listing possible (base,max)):`)
+        _.words('asw evasion los').map(statName => {
+          const pprStr = ({base, max}) => `(${base}, ${max})`
+          if (statReport[statName].length > 0) {
+            console.log(`    ${statName}: ${statReport[statName].map(pprStr).join(', ')}`)
+          } else {
+            console.log(`    ${statName}: <inconsistent data>`)
+          }
+        })
+      } else {
+        console.log(`  ${getShipName(mstId)}: <insufficient data>`)
+      }
+    })
   }
   if (reportInsufficientIds.length > 0) {
     console.log(`StatReport does not have sufficient data for following ships:`)
@@ -121,9 +135,6 @@ const main = async () => {
         console.log(`  ${getShipName(Number(mstIdStr))}: ${xs.map(x => x.statName).join(', ')}`)
     )
   }
-  // const reportMissingIds = []
-  // const reportInsufficientIds = []
-  // const reportInconsistentResults = []
   console.log('==== END SHIP_STAT_REPORT ====')
 }
 
