@@ -12,11 +12,7 @@ const parseDB = data => _(data)
   .map(content => JSON.parse(content))
   .value()
 
-const ERR = 0.001
-
-const floor = num => (Math.ceil(num) - num < ERR ? Math.ceil(num) : Math.floor(num))
-
-const getStatAtLv = (start, stop, lv) => floor((stop - start) * (lv / 99)) + start
+const getStatAtLv = (start, stop, lv) => Math.floor(((stop - start) * lv) / 99) + start
 
 const main = async () => {
   let stat
